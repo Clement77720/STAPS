@@ -1,0 +1,217 @@
+/*
+ * globals.css — Feuille de style globale et design tokens de l'app.
+ *
+ * Organisation :
+ *  1. Imports Tailwind v4 + animations + utilitaires shadcn.
+ *  2. Palette de marque (cf. PROJET.md §3) en variables CSS, clair (:root) et sombre (.dark).
+ *  3. Alias vers les noms attendus par shadcn/ui (card, popover, muted, accent…).
+ *  4. Exposition en tokens Tailwind via `@theme inline` (→ classes bg-surface, text-sport…).
+ *
+ * Correspondance avec le brief — deux noms diffèrent car shadcn/ui les utilise déjà
+ * avec un autre sens :
+ *  - brief `--muted` (texte secondaire)            → `--muted-foreground` (classe `text-muted-foreground`)
+ *    (chez shadcn, `--muted` est un FOND discret : on le fait pointer sur `--surface-2`)
+ *  - brief `--accent` (liens, focus, éléments actifs) → `--link` (classes `text-link`, `ring-link`) + `--ring`
+ *    (chez shadcn, `--accent` est le fond de survol des menus : on le fait pointer sur `--surface-2`)
+ */
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/* Le mode sombre est piloté par la classe `.dark` que next-themes pose sur <html>. */
+@custom-variant dark (&:is(.dark *));
+
+/* ------------------------------------------------------------------ */
+/* Mode clair                                                          */
+/* ------------------------------------------------------------------ */
+:root {
+  /* Palette de marque */
+  --background: #f5f7fb;
+  --surface: #ffffff;
+  --surface-2: #eaf0f8;
+  --border: #d8e0ec;
+  --foreground: #0b1a33;
+  --muted-foreground: #5b6b85;
+  --primary: #14306b;
+  --primary-foreground: #ffffff;
+  --link: #2563eb;
+  --water: #0ea5e9;
+  --sport: #f97316;
+  --course: #14306b;
+  --success: #16a34a;
+  --danger: #dc2626;
+
+  /*
+   * Variantes "strong" pour le TEXTE et les ICÔNES. En clair, --water, --sport et
+   * --success sont trop pâles sur fond blanc (≈ 2,8:1, sous le seuil WCAG AA de 4,5:1) :
+   * on garde les couleurs du brief pour les fonds, jauges et bordures, et on utilise
+   * ces teintes plus foncées dès qu'il s'agit d'écrire ou de dessiner une icône.
+   */
+  --water-strong: #0369a1; /* 5,9:1 sur blanc */
+  --sport-strong: #c2410c; /* 5,2:1 sur blanc */
+  --success-strong: #15803d; /* 5,0:1 sur blanc */
+
+  /* Ombre légère des cartes (supprimée en sombre, remplacée par une bordure) */
+  --card-shadow: 0 1px 2px rgb(11 26 51 / 0.04), 0 4px 16px rgb(11 26 51 / 0.06);
+
+  --radius: 0.75rem;
+}
+
+/* ------------------------------------------------------------------ */
+/* Mode sombre — primary plus clair pour garder un bon contraste       */
+/* ------------------------------------------------------------------ */
+.dark {
+  --background: #060d1a;
+  --surface: #0d1a30;
+  --surface-2: #14243f;
+  --border: #1f3354;
+  --foreground: #e7edf7;
+  --muted-foreground: #93a3bd;
+  --primary: #5b8def;
+  --primary-foreground: #060d1a;
+  --link: #7aa7ff;
+  --water: #38bdf8;
+  --sport: #fb923c;
+  --course: #5b8def;
+  --success: #4ade80;
+  --danger: #f87171;
+
+  /* En sombre, les couleurs de base sont déjà assez contrastées (> 7:1). */
+  --water-strong: var(--water);
+  --sport-strong: var(--sport);
+  --success-strong: var(--success);
+
+  --card-shadow: none;
+}
+
+/*
+ * Alias shadcn/ui. Déclarés une seule fois : comme ils référencent les variables
+ * ci-dessus via var(), ils suivent automatiquement le thème actif.
+ */
+:root {
+  --card: var(--surface);
+  --card-foreground: var(--foreground);
+  --popover: var(--surface);
+  --popover-foreground: var(--foreground);
+  --secondary: var(--surface-2);
+  --secondary-foreground: var(--foreground);
+  --muted: var(--surface-2);
+  --accent: var(--surface-2);
+  --accent-foreground: var(--foreground);
+  --destructive: var(--danger);
+  --input: var(--border);
+  --ring: var(--link);
+
+  /* Séries de graphiques (Recharts) */
+  --chart-1: var(--primary);
+  --chart-2: var(--water);
+  --chart-3: var(--sport);
+  --chart-4: var(--success);
+  --chart-5: var(--link);
+
+  /* Sidebar desktop */
+  --sidebar: var(--surface);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--surface-2);
+  --sidebar-accent-foreground: var(--foreground);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--link);
+}
+
+/* ------------------------------------------------------------------ */
+/* Tokens Tailwind                                                     */
+/* ------------------------------------------------------------------ */
+@theme inline {
+  /* Polices chargées par next/font dans app/layout.tsx */
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-geist-sans);
+
+  /* Palette de marque */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-link: var(--link);
+  --color-water: var(--water);
+  --color-sport: var(--sport);
+  --color-course: var(--course);
+  --color-success: var(--success);
+  --color-danger: var(--danger);
+  --color-water-strong: var(--water-strong);
+  --color-sport-strong: var(--sport-strong);
+  --color-success-strong: var(--success-strong);
+
+  /* Noms shadcn/ui */
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Ombre des cartes → classe `shadow-card` */
+  --shadow-card: var(--card-shadow);
+
+  /* Rayons dérivés de --radius (rounded-2xl ≈ 1.35rem pour les cartes) */
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+    /* Évite le zoom automatique du texte en paysage sur iOS */
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-background text-foreground;
+    /* Supprime le flash gris au tap sur mobile : on gère nos propres états actifs */
+    -webkit-tap-highlight-color: transparent;
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+/*
+ * Espace réservé sous le contenu pour la barre de navigation mobile
+ * (64px de barre + la zone "home indicator" des iPhone).
+ */
+@utility pb-bottom-nav {
+  padding-bottom: calc(4rem + env(safe-area-inset-bottom) + 1rem);
+}
