@@ -5,7 +5,7 @@
 import Link from "next/link";
 import { Brand } from "@/components/layout/brand";
 
-export default function AuthLayout({ children }: LayoutProps<"/">) {
+export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-dvh flex-col items-center justify-center gap-8 px-4 py-10">
       <Link href="/" className="rounded-xl focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none">

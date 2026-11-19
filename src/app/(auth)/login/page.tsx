@@ -1,26 +1,34 @@
 /**
- * /login — page provisoire (Phase 0).
- * Le formulaire Better Auth sera branché en Phase 1.
+ * /login — Connexion.
+ * Le formulaire lit `?next=` et `?reset=ok` dans l'URL (useSearchParams) :
+ * il est donc rendu derrière un <Suspense> (exigence de Cache Components).
  */
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Suspense } from "react";
+import { AuthCard } from "@/features/auth/components/auth-card";
+import { LoginForm } from "@/features/auth/components/login-form";
+import { AuthFormSkeleton } from "@/features/auth/components/auth-form-skeleton";
 
 export const metadata: Metadata = { title: "Connexion" };
 
-export default function Page() {
+export default function LoginPage() {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-xl">Connexion</CardTitle>
-        <CardDescription>Les comptes arrivent en phase 1. En attendant, tu peux parcourir l&apos;aperçu de l&apos;app.</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Button asChild className="w-full">
-          <Link href="/app/planning">Voir l&apos;aperçu</Link>
-        </Button>
-      </CardContent>
-    </Card>
+    <AuthCard
+      title="Connexion"
+      description="Content de te revoir !"
+      footer={
+        <>
+          Pas encore de compte ?&nbsp;
+          <Link href="/register" className="font-medium text-link underline-offset-4 hover:underline">
+            Créer un compte
+          </Link>
+        </>
+      }
+    >
+      <Suspense fallback={<AuthFormSkeleton fields={2} />}>
+        <LoginForm />
+      </Suspense>
+    </AuthCard>
   );
 }

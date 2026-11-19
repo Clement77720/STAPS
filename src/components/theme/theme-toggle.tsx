@@ -9,6 +9,9 @@
  *    Container query : si le conteneur fait moins de 18rem (sidebar), l'icône passe
  *    au-dessus du libellé pour que tout tienne.
  *
+ * `onThemeChange` (optionnel) : appelé après chaque changement, par exemple pour
+ * enregistrer le choix dans le profil quand l'utilisateur est connecté.
+ *
  * next-themes ne connaît le thème réel qu'après l'hydratation côté client :
  * on attend donc d'être "monté" avant d'afficher l'état sélectionné, sinon le
  * rendu serveur et le rendu client divergent (erreur d'hydratation).
@@ -41,16 +44,27 @@ function useIsMounted() {
   );
 }
 
+type ThemeValue = (typeof OPTIONS)[number]["value"];
+
 export function ThemeToggle({
   variant = "compact",
   className,
+  onThemeChange,
 }: {
   variant?: "compact" | "segmented";
   className?: string;
+  onThemeChange?: (theme: ThemeValue) => void | Promise<void>;
 }) {
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme: applyTheme } = useTheme();
   const mounted = useIsMounted();
   const current = mounted ? (theme ?? "system") : undefined;
+
+  function setTheme(value: string) {
+    const next = OPTIONS.find((option) => option.value === value)?.value;
+    if (!next || next === current) return;
+    applyTheme(next);
+    void onThemeChange?.(next);
+  }
 
   if (variant === "segmented") {
     return (

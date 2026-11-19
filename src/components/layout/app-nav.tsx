@@ -20,6 +20,7 @@ import { cn } from "@/lib/utils";
 import { Brand } from "@/components/layout/brand";
 import { NAV_ITEMS } from "@/components/layout/nav-items";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
+import { updateThemeAction } from "@/features/profil/actions";
 
 export function AppNav() {
   return (
@@ -36,7 +37,7 @@ export function AppNav() {
         </nav>
         <div className="space-y-2">
           <p className="px-2 text-xs font-medium text-muted-foreground">Thème</p>
-          <ThemeToggle variant="segmented" />
+          <ThemeToggle variant="segmented" onThemeChange={updateThemeAction} />
         </div>
       </aside>
 

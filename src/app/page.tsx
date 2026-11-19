@@ -1,13 +1,16 @@
 /**
  * Landing ( / ) — présentation rapide de l'app + accès connexion / inscription.
- * Page entièrement statique (pré-rendue au build).
+ * Page statique (pré-rendue au build) ; seul le message "compte supprimé",
+ * qui lit l'URL, est rendu derrière un <Suspense>.
  */
 import Link from "next/link";
+import { Suspense } from "react";
 import { CalendarDays, HeartPulse, UtensilsCrossed } from "lucide-react";
 import { Brand } from "@/components/layout/brand";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { AccountDeletedToast } from "@/features/profil/components/account-deleted-toast";
 
 const FEATURES = [
   {
@@ -71,6 +74,10 @@ export default function LandingPage() {
           ))}
         </section>
       </main>
+
+      <Suspense fallback={null}>
+        <AccountDeletedToast />
+      </Suspense>
 
       <footer className="text-center text-xs text-muted-foreground">
         Les calculs de l&apos;app sont donnés à titre indicatif et ne remplacent pas un avis médical.

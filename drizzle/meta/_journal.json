@@ -1,1 +1,20 @@
-{"version":"7","dialect":"postgresql","entries":[]}
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1795101975620,
+      "tag": "0000_init_auth_profile",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1795102273238,
+      "tag": "0001_rate_limit",
+      "breakpoints": true
+    }
+  ]
+}

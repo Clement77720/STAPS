@@ -1,26 +1,28 @@
 /**
- * /register — page provisoire (Phase 0).
- * Le formulaire Better Auth sera branché en Phase 1.
+ * /register — Création de compte, suivie de l'onboarding.
  */
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { AuthCard } from "@/features/auth/components/auth-card";
+import { RegisterForm } from "@/features/auth/components/register-form";
 
 export const metadata: Metadata = { title: "Inscription" };
 
-export default function Page() {
+export default function RegisterPage() {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-xl">Inscription</CardTitle>
-        <CardDescription>Les comptes arrivent en phase 1. En attendant, tu peux parcourir l&apos;aperçu de l&apos;app.</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Button asChild className="w-full">
-          <Link href="/app/planning">Voir l&apos;aperçu</Link>
-        </Button>
-      </CardContent>
-    </Card>
+    <AuthCard
+      title="Créer un compte"
+      description="Quelques secondes, et on configure ton espace."
+      footer={
+        <>
+          Déjà inscrit·e ?&nbsp;
+          <Link href="/login" className="font-medium text-link underline-offset-4 hover:underline">
+            Se connecter
+          </Link>
+        </>
+      }
+    >
+      <RegisterForm />
+    </AuthCard>
   );
 }

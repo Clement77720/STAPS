@@ -9,8 +9,8 @@ Le cahier des charges complet est dans [`PROJET.md`](./PROJET.md).
 ## Stack
 
 Next.js 16 (App Router, Cache Components) · TypeScript strict · Tailwind CSS v4 ·
-shadcn/ui (Radix) · next-themes · Drizzle ORM + PostgreSQL (Neon) · Zod.
-Better Auth, Recharts, date-fns et node-ical arrivent avec les phases suivantes.
+shadcn/ui (Radix) · next-themes · Drizzle ORM + PostgreSQL (Neon) · Better Auth ·
+Zod + react-hook-form · Vitest. Recharts et node-ical arrivent avec les phases suivantes.
 
 ## Démarrage
 
@@ -18,8 +18,9 @@ Prérequis : Node.js ≥ 20.9 et une base PostgreSQL (Neon recommandé).
 
 ```bash
 npm install
-cp .env.example .env.local   # puis renseigner DATABASE_URL
+cp .env.example .env.local   # puis renseigner DATABASE_URL et BETTER_AUTH_SECRET
 npm run db:check             # vérifie la connexion à la base
+npm run db:migrate           # crée les tables
 npm run dev                  # http://localhost:3000
 ```
 
@@ -37,6 +38,7 @@ npm run dev                  # http://localhost:3000
 | `npm run build` / `npm start` | Build et serveur de production |
 | `npm run lint` | ESLint |
 | `npm run typecheck` | Génère les types de routes puis vérifie TypeScript |
+| `npm test` | Tests unitaires (Vitest) |
 | `npm run db:generate` | Crée une migration SQL à partir du schéma Drizzle |
 | `npm run db:migrate` | Applique les migrations sur `DATABASE_URL` |
 | `npm run db:studio` | Explorateur de base Drizzle Studio |
@@ -60,6 +62,18 @@ scripts/               Scripts CLI (vérif. BDD, seed Ciqual…)
 drizzle/               Migrations SQL générées
 ```
 
+## Authentification
+
+- Email + mot de passe (Better Auth), session de 30 jours vérifiée en base à chaque requête.
+- `src/proxy.ts` redirige vers `/login` sans cookie de session ; la vraie vérification
+  est faite côté serveur dans `src/lib/dal.ts` (`requireUser`, `requireOnboardedUser`).
+- Les formulaires passent par des Server Actions (`src/features/auth/actions.ts`) ;
+  les routes HTTP équivalentes de Better Auth sont désactivées.
+- Limitation des tentatives (anti brute-force) stockée en base : `src/lib/rate-limit.ts`.
+- Inscriptions : ouvertes à tous, ou limitées aux emails de `ALLOWED_EMAILS`.
+- Mot de passe oublié : email via Resend (`RESEND_API_KEY`). Sans clé, le lien
+  s'affiche dans la console du serveur (pratique en local).
+
 ## Design system
 
 Les couleurs du brief sont définies en variables CSS dans `src/app/globals.css`
@@ -77,7 +91,7 @@ Les couleurs du brief sont définies en variables CSS dans `src/app/globals.css`
 ## Roadmap
 
 - [x] **Phase 0** — Setup : Next.js, Tailwind, shadcn/ui, thème, layout mobile, Drizzle
-- [ ] **Phase 1** — Auth (Better Auth), onboarding, profil, calculs + tests
+- [x] **Phase 1** — Auth (Better Auth), onboarding, profil, calculs + tests
 - [ ] **Phase 2** — Planning : import .ics, séances de sport, vues jour / semaine
 - [ ] **Phase 3** — Bien-être : hydratation, poids, IMC, besoins
 - [ ] **Phase 4** — Repas : Ciqual, Open Food Facts, recettes, planification
